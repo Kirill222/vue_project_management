@@ -5,7 +5,7 @@
 
           <div class="icons">
               <span class="material-icons">edit</span>
-              <span class="material-icons">delete</span>
+              <span @click="deleteProject" class="material-icons">delete</span>
               <span class="material-icons">done</span>
           </div>
       </div>
@@ -21,8 +21,16 @@ export default {
     data() {
         return {
             showDetails: false,
+            uri: `http://localhost:3000/projects/${this.project.id}`,
         }
-    },   
+    },
+    methods: {
+        deleteProject() {
+            fetch(this.uri, {method: 'DELETE'})
+                .then(() => this.$emit('delete', this.project.id))
+                .catch(err => console.log(err.message))
+        }
+    }   
 }
 </script>
 
