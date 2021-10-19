@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form @submit.prevent="handleSubmit">
         <label>Title:</label>
         <input type="text" v-model="title" required>
 
@@ -19,6 +19,18 @@ export default {
             title: '',
             details: '',
             uri: `http://localhost:3000/projects/${this.id}`,
+        }
+    },
+    methods: {
+        handleSubmit() {
+            let updatedProject = {title: this.title, details: this.details}
+            fetch(this.uri, {
+                method: 'PATCH',
+                headers: {"Content-type": "application/json"},
+                body: JSON.stringify(updatedProject)
+            })
+            .then(() => this.$router.push({name: 'Home'}))
+            .catch(err => console.log(err.message))
         }
     },
     mounted() {
