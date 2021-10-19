@@ -1,5 +1,6 @@
 <template>
-  <div class="home">
+  <div class="home">    
+  <FilterNav @filterChange="current = $event" :current="current"/>  <!-- $event - the data that were sent by custom event 'filterChange' -->
     <div v-if="projects.length">
       <div v-for="project in projects" :key="project.id">
         <SingleProject :project="project" @delete="handleDelete(project.id)" @complete="handleComplete(project.id)"/>
@@ -10,12 +11,15 @@
 
 <script>
 import SingleProject from '../components/SingleProject.vue'
+import FilterNav from '../components/FilterNav.vue'
+
 
 export default {
   name: 'Home',
   data() {
     return {
-      projects: []
+      projects: [],
+      current: 'all',
     }
   },  
   methods: {
@@ -28,16 +32,11 @@ export default {
       let p = this.projects.find(p => {
         return p.id === id
       })
-      p.complete = !p.complete
-
-      //second method to implement the same logic
-      // this.projects = this.projects.filter(p => {
-      //   if(p.id == id) {
-      //     p.complete = !p.complete
-      //   }
-      //   return this.projects
-      // })
-    }
+      p.complete = !p.complete     
+    },
+    filterBy(by) {
+      
+    },
   },
   mounted() {
     fetch('http://localhost:3000/projects')
@@ -47,6 +46,11 @@ export default {
   },
   components: {
     SingleProject,
+    FilterNav,
   },
 }
 </script>
+
+<style>
+  
+</style>
