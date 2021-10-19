@@ -2,7 +2,7 @@
   <div class="home">    
   <FilterNav @filterChange="current = $event" :current="current"/>  <!-- $event - the data that were sent by custom event 'filterChange' -->
     <div v-if="projects.length">
-      <div v-for="project in projects" :key="project.id">
+      <div v-for="project in filteredProjects" :key="project.id">
         <SingleProject :project="project" @delete="handleDelete(project.id)" @complete="handleComplete(project.id)"/>
       </div>
     </div>
@@ -33,10 +33,7 @@ export default {
         return p.id === id
       })
       p.complete = !p.complete     
-    },
-    filterBy(by) {
-      
-    },
+    },    
   },
   mounted() {
     fetch('http://localhost:3000/projects')
@@ -44,6 +41,18 @@ export default {
       .then(data => this.projects = data)
       .catch(err => console.log(err.message))
   },
+  computed: {
+      filteredProjects() {
+
+        if(this.current === 'completed') {
+          return this.projects.filter(p => p.complete)
+        }
+        if(this.current === 'ongoing') {
+          return this.projects.filter(p => !p.complete)
+        }
+        return this.projects    
+        }
+      },
   components: {
     SingleProject,
     FilterNav,
